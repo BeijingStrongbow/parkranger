@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1064902554194",
+    "firebase_url": "https://parkranger-df5c2.firebaseio.com",
+    "project_id": "parkranger-df5c2",
+    "storage_bucket": "parkranger-df5c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064902554194:android:97ac9024807ab1dd",
+        "android_client_info": {
+          "package_name": "com.github.beijingstrongbow.parkranger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1064902554194-8jbu9foutr0ggvr4r8eqaguffckp6u3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.beijingstrongbow.parkranger",
+            "certificate_hash": "5ac14b16b8954bd3fcd6bf6f7f2d4099f1840f39"
+          }
+        },
+        {
+          "client_id": "1064902554194-9aial8kj0hpna33iea4t275qee53sklk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKInIABjcRA4eHlEUMq3NFMYRK1I3lKz4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1064902554194-9aial8kj0hpna33iea4t275qee53sklk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
