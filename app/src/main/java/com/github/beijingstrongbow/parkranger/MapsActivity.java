@@ -17,6 +17,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -87,12 +88,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     markers.get(i).remove();
                 }
                 markers.clear();
-                if(sos.size() > 0) {
+                if(users.size() > 0) {
                     for (int i = 0; i < users.size(); i++) {
                         MarkerOptions options = new MarkerOptions();
                         options.draggable(false);
                         options.title(users.get(i).name);
                         options.position(new LatLng(users.get(i).latitude, users.get(i).longitude));
+                        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                         markers.add(mMap.addMarker(options));
                     }
                 }
