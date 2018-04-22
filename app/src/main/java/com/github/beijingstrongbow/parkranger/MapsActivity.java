@@ -30,7 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback  {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
 
@@ -93,11 +93,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnInfoWindowClickListener(this);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         }
             markers = new ArrayList<Marker>();
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locationHandler.getLatitude(), locationHandler.getLongitude()), 18));
+
         startMapUpdater();
     }
 
@@ -122,6 +127,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         options.title(users.get(i).name);
                         options.position(new LatLng(users.get(i).latitude, users.get(i).longitude));
                         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        options.zIndex(5);
                         markers.add(mMap.addMarker(options));
                     }
                 }
@@ -134,6 +140,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         options.position(new LatLng(sos.get(i).latitude, sos.get(i).longitude));
                         System.out.println("abc"+ sos.get(i).message);
                         options.title(sos.get(i).message);
+                        options.zIndex(15);
+                        System.out.println("here" + sos.get(i).snippet);
+                        if(sos.get(i).snippet != null && !sos.get(i).snippet.equals("") && !sos.get(i).snippet.equals("null")) {
+                            options.snippet(sos.get(i).snippet);
+                        }
+
                         markers.add(mMap.addMarker(options));
                     }
                 }
@@ -144,6 +156,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     options.position(new LatLng(rangers.get(i).latitude, rangers.get(i).longitude));
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                     options.title(rangers.get(i).name);
+                    options.zIndex(10);
                     markers.add(mMap.addMarker(options));
                 }
 
@@ -152,5 +165,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         };
 
         h.postDelayed(updater, 1000);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        handler.handleSOS(marker.getTitle());
+        System.out.println("abcdef123");
     }
 }

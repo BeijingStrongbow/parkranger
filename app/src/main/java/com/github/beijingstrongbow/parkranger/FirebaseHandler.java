@@ -68,6 +68,7 @@ public class FirebaseHandler {
         newSOS.child("longitude").setValue(Double.toString(longitude));
         newSOS.child("message").setValue(message);
         newSOS.child("time").setValue(System.currentTimeMillis());
+        newSOS.child("snippet").setValue("");
     }
 
     /**
@@ -166,10 +167,10 @@ public class FirebaseHandler {
                         for(DataSnapshot group : dataSnapshot.getChildren()) {
                             String id = (String) group.child("id").getValue();
                             System.out.println(user.isRanger);
-                            if(id.equals(Integer.toString(groupId)) || user.isRanger) {
+                            if(user.isRanger || id.equals(Integer.toString(groupId))) {
 
                                 for(DataSnapshot member : group.child("members").getChildren()) {
-                                    if(((String) member.getKey()).equals(user.uuid.toString())) {
+                                    if(user.uuid != null && ((String) member.getKey()).equals(user.uuid.toString())) {
                                         groups.child(group.getKey()).child("members").child(member.getKey()).child("latitude").setValue(Double.toString(locationHandler.getLatitude()));
                                         groups.child(group.getKey()).child("members").child(member.getKey()).child("longitude").setValue(Double.toString(locationHandler.getLongitude()));
                                     }
@@ -200,6 +201,7 @@ public class FirebaseHandler {
                             loc.latitude = Double.parseDouble((String) d.child("latitude").getValue());
                             loc.longitude = Double.parseDouble((String) d.child("longitude").getValue());
                             loc.message = (String) d.child("message").getValue();
+                            loc.snippet = (String) d.child("snippet").getValue();
                             flagTemp.add(loc);
                         }
                         flags = flagTemp;
@@ -280,6 +282,24 @@ public class FirebaseHandler {
             return true;
         }
         return false;
+    }
+
+    public void handleSOS(final String message) {
+        if(user.isRanger) {
+            sos.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot data : dataSnapshot.getChildren()) {
+                        if(((String) data.child("message").getValue()).equals(message)) {
+                            sos.child(data.getKey()).child("snippet").setValue(user.name + " is coming");
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+        }
     }
 
     public ArrayList<User> getLocations() {

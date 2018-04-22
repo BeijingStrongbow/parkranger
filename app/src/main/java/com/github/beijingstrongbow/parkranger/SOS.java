@@ -8,4 +8,5 @@ public class SOS {
     public double latitude;
     public double longitude;
     String message;
+    String snippet;
 }
