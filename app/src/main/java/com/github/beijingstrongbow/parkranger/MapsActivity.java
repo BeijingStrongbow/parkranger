@@ -41,7 +41,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handler = FirebaseHandler.getInstance();
-        handler.startUpdating(1234);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -88,18 +87,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     markers.get(i).remove();
                 }
                 markers.clear();
-                for(int i = 0; i < users.size(); i++) {
-                    MarkerOptions options = new MarkerOptions();
-                    options.draggable(false);
-                    options.title(users.get(i).name);
-                    options.position(new LatLng(users.get(i).latitude, users.get(i).longitude));
-                    markers.add(mMap.addMarker(options));
+                if(sos.size() > 0) {
+                    for (int i = 0; i < users.size(); i++) {
+                        MarkerOptions options = new MarkerOptions();
+                        options.draggable(false);
+                        options.title(users.get(i).name);
+                        options.position(new LatLng(users.get(i).latitude, users.get(i).longitude));
+                        markers.add(mMap.addMarker(options));
+                    }
                 }
-                for(int i = 0; i < sos.size(); i++) {
-                    MarkerOptions options = new MarkerOptions();
-                    options.draggable(false);
-                    options.position(new LatLng(users.get(i).latitude, users.get(i).longitude));
-                    markers.add(mMap.addMarker(options));
+                if(sos.size() > 0) {
+                    System.out.println(sos.size());
+                    for (int i = 0; i < sos.size(); i++) {
+                        System.out.println("asdf");
+                        MarkerOptions options = new MarkerOptions();
+                        options.draggable(false);
+                        options.position(new LatLng(sos.get(i).latitude, sos.get(i).longitude));
+                        markers.add(mMap.addMarker(options));
+                    }
                 }
 
                 h.postDelayed(this, 1000);

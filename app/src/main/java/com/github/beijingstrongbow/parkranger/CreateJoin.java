@@ -21,6 +21,7 @@ public class CreateJoin extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("test2");
         super.onCreate(savedInstanceState);
         locationHandler = LocationHandler.getInstance(this, (LocationManager) this.getSystemService(Context.LOCATION_SERVICE));
         firebaseHandler = FirebaseHandler.getInstance();
@@ -30,10 +31,12 @@ public class CreateJoin extends AppCompatActivity {
         groupidtxt = (EditText) findViewById(R.id.groupidtxt);
         Button joinbtn = (Button) findViewById(R.id.joinbtn);
         Button createbtn = (Button) findViewById(R.id.createbtn);
-
+        System.out.println("test3");
         joinbtn.setOnClickListener(new View.OnClickListener(){
+
             @Override
             public void onClick(View view){
+                System.out.println("test4");
                 String name = nametxt.getText().toString();
                 if (name.length()==0)
                     Toast.makeText(CreateJoin.this, "Invalid name", Toast.LENGTH_SHORT).show();
@@ -41,7 +44,8 @@ public class CreateJoin extends AppCompatActivity {
                     Integer groupid;
                     if (groupidtxt.getText().toString().length() == 4) {
                         groupid = Integer.parseInt(groupidtxt.getText().toString());
-                        if (FirebaseHandler.addUserToGroup(groupid,LocationHandler.getLatitude(),LocationHandler.getLongitude(),name)) {
+                        firebaseHandler.addUserToGroup(groupid,locationHandler.getLatitude(),locationHandler.getLongitude(),name);
+                        if (true) {
                             Toast.makeText(CreateJoin.this, "Joined Successfully", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(CreateJoin.this, MapsActivity.class);
                             startActivity(intent);
@@ -56,6 +60,7 @@ public class CreateJoin extends AppCompatActivity {
         createbtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+                System.out.println("test5");
                 String name = nametxt.getText().toString();
                 if (name.length()==0)
                     Toast.makeText(CreateJoin.this, "Invalid name", Toast.LENGTH_SHORT).show();
@@ -63,8 +68,11 @@ public class CreateJoin extends AppCompatActivity {
                     int groupid;
                     if (groupidtxt.getText().toString().length() == 4) {
                         groupid = Integer.parseInt(groupidtxt.getText().toString());
-                        if (FirebaseHandler.addGroup(groupid,LocationHandler.getLatitude(),LocationHandler.getLongitude(),name)) {
-                            Toast.makeText(CreateJoin.this, "Created Successfully", Toast.LENGTH_SHORT).show();
+                        System.out.println("test1");
+                        System.out.println(locationHandler.getLatitude() + " " + locationHandler.getLongitude());
+                        firebaseHandler.addGroup(groupid,locationHandler.getLatitude(),locationHandler.getLongitude(),name);
+                        if (true) {
+                            Toast.makeText(CreateJoin.this, "Created Successfully potato", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(CreateJoin.this, MapsActivity.class);
                             startActivity(intent);
                         }

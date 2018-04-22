@@ -70,6 +70,8 @@ public class LocationHandler implements ActivityCompat.OnRequestPermissionsResul
             public void onLocationChanged(Location location) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
+                System.out.println(latitude);
+                System.out.println(longitude);
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}

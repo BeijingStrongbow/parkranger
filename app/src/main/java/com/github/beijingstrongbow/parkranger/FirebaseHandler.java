@@ -13,15 +13,15 @@ import android.os.Handler;
  */
 
 public class FirebaseHandler {
-
+    private LocationHandler locationHandler = LocationHandler.getInstance();
     private FirebaseDatabase database;
     private DatabaseReference sos;
     private DatabaseReference groups;
 
-    private double latitude = 56.2;
-    private double longitude = 37.8;
+    private double latitude;
+    private double longitude;
 
-    private UUID user;
+    private UUID user = UUID.fromString("5aa018dd-8124-4afb-9a5b-c45a23f826ad");
 
     private ArrayList<User> locations = new ArrayList<User>();
     private ArrayList<SOS> flags = new ArrayList<SOS>();
@@ -70,9 +70,12 @@ public class FirebaseHandler {
      * @param creatorLong The creator's longitude
      */
     public void addGroup(int groupId, double creatorLat, double creatorLong, String name) {
+        latitude = creatorLat;
+        longitude = creatorLong;
         UUID uuid = UUID.randomUUID();
         DatabaseReference newGroup = groups.push();
         newGroup.child("id").setValue(Integer.toString(groupId));
+        System.out.println("test1");
 
         DatabaseReference members = newGroup.child("members");
         DatabaseReference newMember = members.child(uuid.toString());
@@ -93,6 +96,8 @@ public class FirebaseHandler {
      */
     public void addUserToGroup(final int groupId, final double latitude, final double longitude, final String name) {
         final UUID user = UUID.randomUUID();
+        this.latitude = latitude;
+        this.longitude = longitude;
 
         groups.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -134,8 +139,8 @@ public class FirebaseHandler {
 
                                 for(DataSnapshot member : group.child("members").getChildren()) {
                                     if(((String) member.getKey()).equals(user.toString())) {
-                                        groups.child(group.getKey()).child("members").child(member.getKey()).child("latitude").setValue(Double.toString(latitude));
-                                        groups.child(group.getKey()).child("members").child(member.getKey()).child("longitude").setValue(Double.toString(longitude));
+                                        groups.child(group.getKey()).child("members").child(member.getKey()).child("latitude").setValue(Double.toString(locationHandler.getLatitude()));
+                                        groups.child(group.getKey()).child("members").child(member.getKey()).child("longitude").setValue(Double.toString(locationHandler.getLongitude()));
                                     }
                                     else {
                                         User loc = new User();
