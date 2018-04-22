@@ -5,6 +5,7 @@ import com.google.firebase.database.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import android.os.Handler;
@@ -18,15 +19,14 @@ public class FirebaseHandler {
     private FirebaseDatabase database;
     private DatabaseReference sos;
     private DatabaseReference groups;
+    private DatabaseReference rangers;
 
-    private double latitude;
-    private double longitude;
-
-    private UUID user = UUID.fromString("5aa018dd-8124-4afb-9a5b-c45a23f826ad");
+    private User user;
 
     private ArrayList<User> locations = new ArrayList<User>();
     private ArrayList<SOS> flags = new ArrayList<SOS>();
     private ArrayList<String> groupIds = new ArrayList<String>();
+    private HashMap<String, String> rangerLogins = new HashMap<String, String>();
 
     private static FirebaseHandler h = null;
 
@@ -42,13 +42,17 @@ public class FirebaseHandler {
         database = FirebaseDatabase.getInstance();
         sos = database.getReference("sos");
         groups = database.getReference("groups");
+        rangers = database.getReference("rangers");
     }
 
     private FirebaseHandler(String userId) {
         database = FirebaseDatabase.getInstance();
         sos = database.getReference("sos");
         groups = database.getReference("groups");
-        user = UUID.fromString(userId);
+        rangers = database.getReference("rangers");
+        user = new User();
+        user.uuid = UUID.fromString(userId);
+        user.isRanger = false;
     }
 
     /**
@@ -76,8 +80,6 @@ public class FirebaseHandler {
             return false;
         }
 
-        latitude = creatorLat;
-        longitude = creatorLong;
         UUID uuid = UUID.randomUUID();
         DatabaseReference newGroup = groups.push();
         newGroup.child("id").setValue(Integer.toString(groupId));
@@ -89,7 +91,13 @@ public class FirebaseHandler {
         newMember.child("longitude").setValue(Double.toString(creatorLong));
         newMember.child("name").setValue(name);
 
-        user = uuid;
+        user = new User();
+        user.uuid = uuid;
+        user.latitude = creatorLat;
+        user.longitude = creatorLong;
+        user.name = name;
+        user.groupId = groupId;
+        user.isRanger = false;
         startUpdating(groupId);
 
         return true;
@@ -104,8 +112,6 @@ public class FirebaseHandler {
      */
     public boolean addUserToGroup(final int groupId, final double latitude, final double longitude, final String name) {
         final UUID user = UUID.randomUUID();
-        this.latitude = latitude;
-        this.longitude = longitude;
 
         if(!groupIds.contains(Integer.toString(groupId))) {
             return false;
@@ -129,7 +135,13 @@ public class FirebaseHandler {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
-        this.user = user;
+        this.user = new User();
+        this.user.uuid = user;
+        this.user.latitude = latitude;
+        this.user.longitude = longitude;
+        this.user.isRanger = false;
+        this.user.groupId = groupId;
+        this.user.name = name;
         startUpdating(groupId);
         return true;
     }
@@ -147,8 +159,8 @@ public class FirebaseHandler {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for(DataSnapshot group : dataSnapshot.getChildren()) {
                             String id = (String) group.child("id").getValue();
-
-                            if(id.equals(Integer.toString(groupId))) {
+                            System.out.println(user.isRanger);
+                            if(id.equals(Integer.toString(groupId)) || user.isRanger) {
 
                                 for(DataSnapshot member : group.child("members").getChildren()) {
                                     if(((String) member.getKey()).equals(user.toString())) {
@@ -197,11 +209,6 @@ public class FirebaseHandler {
         handler.postDelayed(update, 5000);
     }
 
-    public void setLocation(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
     public void getGroups() {
         groups.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -214,12 +221,36 @@ public class FirebaseHandler {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
+        rangers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot d : dataSnapshot.getChildren()) {
+                    rangerLogins.put(d.getKey(), ((String) d.getValue()));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+    }
+
+    public boolean checkLogin(String username, String password) {
+        if(rangerLogins.containsKey(username) && rangerLogins.get(username).equals(password)) {
+            user = new User();
+            user.isRanger = true;
+            user.name = username;
+            user.latitude = locationHandler.getLatitude();
+            user.longitude = locationHandler.getLongitude();
+            startUpdating(1234);
+            return true;
+        }
+        return false;
     }
 
     public ArrayList<User> getLocations() {
         return locations;
     }
-    public String getName() { return "DEFAULT NAME";} // Todo: need to find the actual name.
-    public String getGroupID() { return groupIds.get(0);}    // Todo: need to find the actual groupID.
+    public String getName() { return user.name;} // Todo: need to find the actual name.
+    public String getGroupID() { return Integer.toString(user.groupId);}    // Todo: need to find the actual groupID.
     public ArrayList<SOS> getSOS() { return flags; }
 }
