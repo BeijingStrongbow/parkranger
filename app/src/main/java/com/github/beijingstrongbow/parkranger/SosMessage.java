@@ -33,7 +33,10 @@ public class SosMessage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String message = messagetxt.getText().toString();
+                FirebaseHandler.getInstance().putSOS(LocationHandler.getInstance().getLatitude(), LocationHandler.getInstance().getLongitude(), message);
                 Toast.makeText(SosMessage.this, "Send message successfully", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SosMessage.this, MapsActivity.class);
+                startActivity(intent);
             }
         });
     }

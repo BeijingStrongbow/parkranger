@@ -62,10 +62,11 @@ public class FirebaseHandler {
      * @param latitude The latitude of the SOS
      * @param longitude The longitude of the SOS
      */
-    public void putSOS(double latitude, double longitude) {
+    public void putSOS(double latitude, double longitude, String message) {
         DatabaseReference newSOS = sos.push();
         newSOS.child("latitude").setValue(Double.toString(latitude));
         newSOS.child("longitude").setValue(Double.toString(longitude));
+        newSOS.child("message").setValue(message);
         newSOS.child("time").setValue(System.currentTimeMillis());
     }
 
@@ -168,7 +169,7 @@ public class FirebaseHandler {
                             if(id.equals(Integer.toString(groupId)) || user.isRanger) {
 
                                 for(DataSnapshot member : group.child("members").getChildren()) {
-                                    if(((String) member.getKey()).equals(user.toString())) {
+                                    if(((String) member.getKey()).equals(user.uuid.toString())) {
                                         groups.child(group.getKey()).child("members").child(member.getKey()).child("latitude").setValue(Double.toString(locationHandler.getLatitude()));
                                         groups.child(group.getKey()).child("members").child(member.getKey()).child("longitude").setValue(Double.toString(locationHandler.getLongitude()));
                                     }
@@ -198,6 +199,7 @@ public class FirebaseHandler {
                             SOS loc = new SOS();
                             loc.latitude = Double.parseDouble((String) d.child("latitude").getValue());
                             loc.longitude = Double.parseDouble((String) d.child("longitude").getValue());
+                            loc.message = (String) d.child("message").getValue();
                             flagTemp.add(loc);
                         }
                         flags = flagTemp;

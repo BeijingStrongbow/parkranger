@@ -73,8 +73,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         sosbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handler.putSOS(locationHandler.getLatitude(),locationHandler.getLongitude());
-                Toast.makeText(MapsActivity.this,"We're sending a ranger to your position",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(MapsActivity.this, SosMessage.class);
                 startActivity(intent);
             }
@@ -134,6 +132,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         MarkerOptions options = new MarkerOptions();
                         options.draggable(false);
                         options.position(new LatLng(sos.get(i).latitude, sos.get(i).longitude));
+                        System.out.println("abc"+ sos.get(i).message);
+                        options.title(sos.get(i).message);
                         markers.add(mMap.addMarker(options));
                     }
                 }
