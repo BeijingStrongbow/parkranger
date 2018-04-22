@@ -26,7 +26,25 @@ public class LocationHandler implements ActivityCompat.OnRequestPermissionsResul
 
     private Activity activity;
 
-    public LocationHandler(Activity a, LocationManager loc) {
+    private static LocationHandler h = null;
+
+    public static LocationHandler getInstance() throws RuntimeException {
+        if(h == null) {
+            throw new RuntimeException("LocationHandler not initialized");
+        }
+
+        return h;
+    }
+
+    public static LocationHandler getInstance(Activity a, LocationManager loc) {
+        if(h == null) {
+            h = new LocationHandler(a, loc);
+        }
+
+        return h;
+    }
+
+    private LocationHandler(Activity a, LocationManager loc) {
         locationManager = loc;
         activity = a;
         String locationProvider = LocationManager.GPS_PROVIDER;
