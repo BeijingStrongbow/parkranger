@@ -18,40 +18,39 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback  {
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback  {
 
     private GoogleMap mMap;
 
-    private LocationListener listener;
+    private LocationManager locationManager;
+
+    private FirebaseHandler handler;
+
+    private LocationHandler locationHandler;
+
+    private ArrayList<Marker> markers;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("test2");
         super.onCreate(savedInstanceState);
+        handler = FirebaseHandler.getInstance();
+        handler.startUpdating(1234);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        System.out.println("test3");        // Acquire a reference to the system Location Manager
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         // Define a listener that responds to location updates
 
-        String locationProvider = LocationManager.GPS_PROVIDER;
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            addLocationListener(locationManager);
-        }
-        else {
-            String[] permissions = {"android.permission.ACCESS_FINE_LOCATION"};
-            requestPermissions(permissions, 5);
-
-        }
-        System.out.println("test1");
+        locationHandler = new LocationHandler(this, (LocationManager) this.getSystemService(Context.LOCATION_SERVICE));
 
     }
 
@@ -68,40 +67,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-    }
-
-    private void addLocationListener(LocationManager locationManager) {
-        listener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                // Called when a new location is found by the network location provider.
-                System.out.println("location");
-                System.out.println(location);
-                // pass information to firebase
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-            public void onProviderEnabled(String provider) {
-                System.out.println("GPS enabled!");
-            }
-
-            public void onProviderDisabled(String provider) {}
-        };
-        System.out.println("mememeeesss");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            System.out.println("this is kind of dumb");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+            mMap.setMyLocationEnabled(true);
         }
+            markers = new ArrayList<Marker>();
+        startMapUpdater();
+    }
+
+    private void startMapUpdater() {
+        final Handler h = new Handler();
+;
+        Runnable updater = new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<User> users = handler.getLocations();
+                ArrayList<SOS> sos = handler.getSOS();
+
+                for(int i = 0; i < markers.size(); i++) {
+                    markers.get(i).remove();
+                }
+                markers.clear();
+                for(int i = 0; i < users.size(); i++) {
+                    MarkerOptions options = new MarkerOptions();
+                    options.draggable(false);
+                    options.title(users.get(i).name);
+                    options.position(new LatLng(users.get(i).latitude, users.get(i).longitude));
+                    markers.add(mMap.addMarker(options));
+                }
+                for(int i = 0; i < sos.size(); i++) {
+                    MarkerOptions options = new MarkerOptions();
+                    options.draggable(false);
+                    options.position(new LatLng(users.get(i).latitude, users.get(i).longitude));
+                    markers.add(mMap.addMarker(options));
+                }
+
+                h.postDelayed(this, 1000);
+            }
+        };
+
+        h.postDelayed(updater, 1000);
     }
 }

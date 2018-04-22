@@ -29,13 +29,23 @@ public class FirebaseHandler {
     private ArrayList<User> locations = new ArrayList<User>();
     private ArrayList<SOS> flags = new ArrayList<SOS>();
 
-    public FirebaseHandler() {
+    private static FirebaseHandler h = null;
+
+    public static FirebaseHandler getInstance() {
+        if(h == null) {
+            h = new FirebaseHandler();
+        }
+
+        return h;
+    }
+
+    private FirebaseHandler() {
         database = FirebaseDatabase.getInstance();
         sos = database.getReference("sos");
         groups = database.getReference("groups");
     }
 
-    public FirebaseHandler(String userId) {
+    private FirebaseHandler(String userId) {
         database = FirebaseDatabase.getInstance();
         sos = database.getReference("sos");
         groups = database.getReference("groups");
