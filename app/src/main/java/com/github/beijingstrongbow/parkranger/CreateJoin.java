@@ -1,7 +1,9 @@
 package com.github.beijingstrongbow.parkranger;
 
 import android.app.ApplicationErrorReport;
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,9 +16,14 @@ public class CreateJoin extends AppCompatActivity {
     EditText nametxt;
     EditText groupidtxt;
 
+    private LocationHandler locationHandler;
+    private FirebaseHandler firebaseHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        locationHandler = LocationHandler.getInstance(this, (LocationManager) this.getSystemService(Context.LOCATION_SERVICE));
+        firebaseHandler = FirebaseHandler.getInstance();
         setContentView(R.layout.activity_create_join);
 
         nametxt = (EditText) findViewById(R.id.nametxt);

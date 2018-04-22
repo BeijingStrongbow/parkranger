@@ -50,7 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Define a listener that responds to location updates
 
-        locationHandler = new LocationHandler(this, (LocationManager) this.getSystemService(Context.LOCATION_SERVICE));
+        locationHandler = LocationHandler.getInstance();
 
     }
 
