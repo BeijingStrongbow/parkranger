@@ -26,6 +26,7 @@ public class FirebaseHandler {
     private ArrayList<User> locations = new ArrayList<User>();
     private ArrayList<SOS> flags = new ArrayList<SOS>();
     private ArrayList<String> groupIds = new ArrayList<String>();
+    private ArrayList<User> rangerLocations = new ArrayList<User>();
     private HashMap<String, String> rangerLogins = new HashMap<String, String>();
 
     private static FirebaseHandler h = null;
@@ -146,6 +147,10 @@ public class FirebaseHandler {
         return true;
     }
 
+    public void logOut() {
+
+    }
+
     public void startUpdating(final int groupId) {
         final Handler handler = new Handler();
 
@@ -202,6 +207,34 @@ public class FirebaseHandler {
                     public void onCancelled(DatabaseError databaseError) {}
                 });
 
+                if(user.isRanger) {
+                    rangers.addListenerForSingleValueEvent(new ValueEventListener() {
+                        ArrayList<User> temp = new ArrayList<User>();
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for(DataSnapshot d : dataSnapshot.getChildren()) {
+                                if(d.getKey().equals(user.name)) {
+                                    rangers.child(d.getKey()).child("latitude").setValue(Double.toString(locationHandler.getLatitude()));
+                                    rangers.child(d.getKey()).child("longitude").setValue(Double.toString(locationHandler.getLongitude()));
+                                }
+                                else {
+                                    User loc = new User();
+                                    loc.latitude = Double.parseDouble((String) d.child("latitude").getValue());
+                                    loc.longitude = Double.parseDouble((String) d.child("longitude").getValue());
+                                    loc.name = (String) d.getKey();
+                                    loc.isRanger = true;
+                                    temp.add(loc);
+                                }
+                            }
+                            rangerLocations = temp;
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {}
+                    });
+                }
+
                 handler.postDelayed(this, 5000);
             }
         };
@@ -225,7 +258,7 @@ public class FirebaseHandler {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot d : dataSnapshot.getChildren()) {
-                    rangerLogins.put(d.getKey(), ((String) d.getValue()));
+                    rangerLogins.put(d.getKey(), ((String) d.child("password").getValue()));
                 }
             }
 
@@ -250,7 +283,15 @@ public class FirebaseHandler {
     public ArrayList<User> getLocations() {
         return locations;
     }
-    public String getName() { return user.name;} // Todo: need to find the actual name.
-    public String getGroupID() { return Integer.toString(user.groupId);}    // Todo: need to find the actual groupID.
+    public ArrayList<User> getRangerLocations() {
+        if(user.isRanger) {
+            return rangerLocations;
+        }
+        else {
+            return new ArrayList<User>();
+        }
+    }
+    public String getName() { return user.name;}
+    public String getGroupID() { return Integer.toString(user.groupId);}
     public ArrayList<SOS> getSOS() { return flags; }
 }

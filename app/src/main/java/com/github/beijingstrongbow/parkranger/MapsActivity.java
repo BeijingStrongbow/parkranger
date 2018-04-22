@@ -108,6 +108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void run() {
                 ArrayList<User> users = handler.getLocations();
                 ArrayList<SOS> sos = handler.getSOS();
+                ArrayList<User> rangers = handler.getRangerLocations();
 
                 for(int i = 0; i < markers.size(); i++) {
                     markers.get(i).remove();
@@ -132,6 +133,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         options.position(new LatLng(sos.get(i).latitude, sos.get(i).longitude));
                         markers.add(mMap.addMarker(options));
                     }
+                }
+                for(int i = 0; i < rangers.size(); i++) {
+                    System.out.println("asdf");
+                    MarkerOptions options = new MarkerOptions();
+                    options.draggable(false);
+                    options.position(new LatLng(rangers.get(i).latitude, rangers.get(i).longitude));
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    options.title(rangers.get(i).name);
+                    markers.add(mMap.addMarker(options));
                 }
 
                 h.postDelayed(this, 1000);
