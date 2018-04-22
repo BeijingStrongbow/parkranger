@@ -3,6 +3,7 @@ package com.github.beijingstrongbow.parkranger;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -74,6 +75,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 handler.putSOS(locationHandler.getLatitude(),locationHandler.getLongitude());
                 Toast.makeText(MapsActivity.this,"We're sending a ranger to your position",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MapsActivity.this, SosMessage.class);
+                startActivity(intent);
             }
         });
 
