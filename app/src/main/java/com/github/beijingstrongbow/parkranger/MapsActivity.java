@@ -12,6 +12,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,12 +41,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private ArrayList<Marker> markers;
 
+    TextView nametxt;
+    TextView groupidtxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handler = FirebaseHandler.getInstance();
         setContentView(R.layout.activity_maps);
+
+        // Show name and groupID
+        nametxt = (TextView) findViewById(R.id.nametxt);
+        groupidtxt = (TextView) findViewById(R.id.groupidtxt);
+
+        nametxt.setText(handler.getName());
+        groupidtxt.setText(handler.getGroupID());
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -51,6 +65,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Define a listener that responds to location updates
 
         locationHandler = LocationHandler.getInstance();
+
+        // SOS Button
+
+        Button sosbtn = (Button) findViewById(R.id.sosbtn);
+        sosbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handler.putSOS(locationHandler.getLatitude(),locationHandler.getLongitude());
+                Toast.makeText(MapsActivity.this,"We're sending a ranger to your position",Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 

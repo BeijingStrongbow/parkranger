@@ -3,6 +3,7 @@ package com.github.beijingstrongbow.parkranger;
 
 import com.google.firebase.database.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -218,8 +219,7 @@ public class FirebaseHandler {
     public ArrayList<User> getLocations() {
         return locations;
     }
-
-    public ArrayList<SOS> getSOS() {
-        return flags;
-    }
+    public String getName() { return "DEFAULT NAME";} // Todo: need to find the actual name.
+    public String getGroupID() { return groupIds.get(0);}    // Todo: need to find the actual groupID.
+    public ArrayList<SOS> getSOS() { return flags; }
 }

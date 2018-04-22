@@ -72,7 +72,7 @@ public class CreateJoin extends AppCompatActivity {
                         System.out.println(locationHandler.getLatitude() + " " + locationHandler.getLongitude());
 
                         if (firebaseHandler.addGroup(groupid, locationHandler.getLatitude(), locationHandler.getLongitude(), name)) {
-                            Toast.makeText(CreateJoin.this, "Created Successfully potato", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateJoin.this, "Created Successfully", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(CreateJoin.this, MapsActivity.class);
                             startActivity(intent);
                         }
