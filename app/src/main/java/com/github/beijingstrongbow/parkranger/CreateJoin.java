@@ -25,6 +25,7 @@ public class CreateJoin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         locationHandler = LocationHandler.getInstance(this, (LocationManager) this.getSystemService(Context.LOCATION_SERVICE));
         firebaseHandler = FirebaseHandler.getInstance();
+        firebaseHandler.getGroups();
         setContentView(R.layout.activity_create_join);
 
         nametxt = (EditText) findViewById(R.id.nametxt);
@@ -44,8 +45,7 @@ public class CreateJoin extends AppCompatActivity {
                     Integer groupid;
                     if (groupidtxt.getText().toString().length() == 4) {
                         groupid = Integer.parseInt(groupidtxt.getText().toString());
-                        firebaseHandler.addUserToGroup(groupid,locationHandler.getLatitude(),locationHandler.getLongitude(),name);
-                        if (true) {
+                        if(firebaseHandler.addUserToGroup(groupid, locationHandler.getLatitude(), locationHandler.getLongitude(),name)) {
                             Toast.makeText(CreateJoin.this, "Joined Successfully", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(CreateJoin.this, MapsActivity.class);
                             startActivity(intent);
@@ -70,8 +70,8 @@ public class CreateJoin extends AppCompatActivity {
                         groupid = Integer.parseInt(groupidtxt.getText().toString());
                         System.out.println("test1");
                         System.out.println(locationHandler.getLatitude() + " " + locationHandler.getLongitude());
-                        firebaseHandler.addGroup(groupid,locationHandler.getLatitude(),locationHandler.getLongitude(),name);
-                        if (true) {
+
+                        if (firebaseHandler.addGroup(groupid, locationHandler.getLatitude(), locationHandler.getLongitude(), name)) {
                             Toast.makeText(CreateJoin.this, "Created Successfully potato", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(CreateJoin.this, MapsActivity.class);
                             startActivity(intent);

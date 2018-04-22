@@ -25,6 +25,7 @@ public class FirebaseHandler {
 
     private ArrayList<User> locations = new ArrayList<User>();
     private ArrayList<SOS> flags = new ArrayList<SOS>();
+    private ArrayList<String> groupIds = new ArrayList<String>();
 
     private static FirebaseHandler h = null;
 
@@ -69,7 +70,11 @@ public class FirebaseHandler {
      * @param creatorLat The creator's latitude
      * @param creatorLong The creator's longitude
      */
-    public void addGroup(int groupId, double creatorLat, double creatorLong, String name) {
+    public boolean addGroup(int groupId, double creatorLat, double creatorLong, String name) {
+        if(groupIds.contains(Integer.toString(groupId))) {
+            return false;
+        }
+
         latitude = creatorLat;
         longitude = creatorLong;
         UUID uuid = UUID.randomUUID();
@@ -85,6 +90,8 @@ public class FirebaseHandler {
 
         user = uuid;
         startUpdating(groupId);
+
+        return true;
     }
 
     /**
@@ -94,10 +101,14 @@ public class FirebaseHandler {
      * @param latitude The user's current latitude
      * @param longitude The user's current longitude
      */
-    public void addUserToGroup(final int groupId, final double latitude, final double longitude, final String name) {
+    public boolean addUserToGroup(final int groupId, final double latitude, final double longitude, final String name) {
         final UUID user = UUID.randomUUID();
         this.latitude = latitude;
         this.longitude = longitude;
+
+        if(!groupIds.contains(Integer.toString(groupId))) {
+            return false;
+        }
 
         groups.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -119,6 +130,7 @@ public class FirebaseHandler {
         });
         this.user = user;
         startUpdating(groupId);
+        return true;
     }
 
     public void startUpdating(final int groupId) {
@@ -187,6 +199,20 @@ public class FirebaseHandler {
     public void setLocation(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public void getGroups() {
+        groups.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot d : dataSnapshot.getChildren()) {
+                    groupIds.add((String) d.child("id").getValue());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
     public ArrayList<User> getLocations() {
