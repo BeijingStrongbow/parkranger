@@ -10,13 +10,15 @@
 
     <Button
         android:id="@+id/createbtn"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/holo_red_dark"
         android:text="Create"
         android:textColor="@android:color/white"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/joinbtn"
         app:layout_constraintTop_toBottomOf="@+id/groupidtxt" />
 
@@ -42,24 +44,29 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="100dp"
         android:text="Park Ranger App"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Park Ranger App" />
 
     <Button
         android:id="@+id/joinbtn"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/holo_red_dark"
         android:text="Join"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/groupidtxt"
-        tools:layout_editor_absoluteX="114dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/groupidtxt" />
 
 </android.support.constraint.ConstraintLayout>
