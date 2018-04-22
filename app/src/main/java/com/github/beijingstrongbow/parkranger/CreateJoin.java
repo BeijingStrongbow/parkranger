@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class CreateJoin extends AppCompatActivity {
 
@@ -24,8 +25,12 @@ public class CreateJoin extends AppCompatActivity {
         joinbtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Double groupid = Double.parseDouble(groupidtxt.getText().toString());
-
+                double groupid;
+                if (groupidtxt.getText().toString().length()!=0) {
+                    groupid = Double.parseDouble(groupidtxt.getText().toString());
+                    Toast.makeText(CreateJoin.this, "Joined Successfully",Toast.LENGTH_SHORT).show();
+                }
+                else Toast.makeText(CreateJoin.this, "Invalid group ID",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -33,9 +38,20 @@ public class CreateJoin extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 String name = nametxt.getText().toString();
-                Double groupid = Double.parseDouble(groupidtxt.getText().toString());
-
+                if (name.length()==0)
+                    Toast.makeText(CreateJoin.this, "Invalid name", Toast.LENGTH_SHORT).show();
+                else {
+                    double groupid;
+                    if (groupidtxt.getText().toString().length() != 0) {
+                        groupid = Double.parseDouble(groupidtxt.getText().toString());
+                        Toast.makeText(CreateJoin.this, "Created Successfully",Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                        Toast.makeText(CreateJoin.this, "Invalid group ID", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 }
+
+

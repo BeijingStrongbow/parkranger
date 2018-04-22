@@ -12,28 +12,31 @@
         android:id="@+id/createbtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:background="@android:color/holo_red_dark"
         android:text="Create"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="239dp"
-        tools:layout_editor_absoluteY="294dp" />
+        app:layout_constraintLeft_toRightOf="@+id/joinbtn"
+        app:layout_constraintTop_toBottomOf="@+id/groupidtxt" />
 
     <android.support.design.widget.TextInputEditText
         android:id="@+id/groupidtxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:hint="input your group ID"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="217dp" />
+        app:layout_constraintTop_toBottomOf="@+id/nametxt"
+        tools:layout_editor_absoluteX="0dp" />
 
     <android.support.design.widget.TextInputEditText
         android:id="@+id/nametxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:hint="input your name"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="151dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/textView"
@@ -51,11 +54,12 @@
         android:id="@+id/joinbtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:background="@android:color/holo_red_dark"
         android:text="Join"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="294dp" />
+        app:layout_constraintTop_toBottomOf="@+id/groupidtxt"
+        tools:layout_editor_absoluteX="114dp" />
 
 </android.support.constraint.ConstraintLayout>
