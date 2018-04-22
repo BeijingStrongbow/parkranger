@@ -30,9 +30,9 @@ public class CreateJoin extends AppCompatActivity {
 
         nametxt = (EditText) findViewById(R.id.nametxt);
         groupidtxt = (EditText) findViewById(R.id.groupidtxt);
-        Button joinbtn = (Button) findViewById(R.id.joinbtn);
-        Button createbtn = (Button) findViewById(R.id.createbtn);
         System.out.println("test3");
+
+        Button joinbtn = (Button) findViewById(R.id.joinbtn);
         joinbtn.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -57,6 +57,7 @@ public class CreateJoin extends AppCompatActivity {
             }
         });
 
+        Button createbtn = (Button) findViewById(R.id.createbtn);
         createbtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -82,6 +83,15 @@ public class CreateJoin extends AppCompatActivity {
                         Toast.makeText(CreateJoin.this, "Invalid group ID", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
+
+        Button rangerbtn = (Button) findViewById(R.id.rangerbtn);
+        rangerbtn.setOnClickListener(new View.OnClickListener(){
+           @Override
+           public void onClick(View view){
+               Intent intent = new Intent(CreateJoin.this, RangerLogin.class);
+               startActivity(intent);
+           }
         });
     }
 }
