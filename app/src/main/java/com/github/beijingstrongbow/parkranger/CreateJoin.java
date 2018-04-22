@@ -38,12 +38,15 @@ public class CreateJoin extends AppCompatActivity {
                 if (name.length()==0)
                     Toast.makeText(CreateJoin.this, "Invalid name", Toast.LENGTH_SHORT).show();
                 else {
-                    double groupid;
-                    if (groupidtxt.getText().toString().length() != 0) {
-                        groupid = Double.parseDouble(groupidtxt.getText().toString());
-                        Toast.makeText(CreateJoin.this, "Joined Successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(CreateJoin.this, MapsActivity.class);
-                        startActivity(intent);
+                    Integer groupid;
+                    if (groupidtxt.getText().toString().length() == 4) {
+                        groupid = Integer.parseInt(groupidtxt.getText().toString());
+                        if (FirebaseHandler.addUserToGroup(groupid,LocationHandler.getLatitude(),LocationHandler.getLongitude(),name)) {
+                            Toast.makeText(CreateJoin.this, "Joined Successfully", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(CreateJoin.this, MapsActivity.class);
+                            startActivity(intent);
+                        }
+                        else Toast.makeText(CreateJoin.this, "Group ID does not exist", Toast.LENGTH_SHORT).show();
                     } else
                         Toast.makeText(CreateJoin.this, "Invalid group ID", Toast.LENGTH_SHORT).show();
                 }
@@ -57,12 +60,15 @@ public class CreateJoin extends AppCompatActivity {
                 if (name.length()==0)
                     Toast.makeText(CreateJoin.this, "Invalid name", Toast.LENGTH_SHORT).show();
                 else {
-                    double groupid;
-                    if (groupidtxt.getText().toString().length() != 0) {
-                        groupid = Double.parseDouble(groupidtxt.getText().toString());
-                        Toast.makeText(CreateJoin.this, "Created Successfully",Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(CreateJoin.this,MapsActivity.class);
-                        startActivity(intent);
+                    int groupid;
+                    if (groupidtxt.getText().toString().length() == 4) {
+                        groupid = Integer.parseInt(groupidtxt.getText().toString());
+                        if (FirebaseHandler.addGroup(groupid,LocationHandler.getLatitude(),LocationHandler.getLongitude(),name)) {
+                            Toast.makeText(CreateJoin.this, "Created Successfully", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(CreateJoin.this, MapsActivity.class);
+                            startActivity(intent);
+                        }
+                        else Toast.makeText(CreateJoin.this, "Group ID already exist", Toast.LENGTH_SHORT).show();
                     }
                     else
                         Toast.makeText(CreateJoin.this, "Invalid group ID", Toast.LENGTH_SHORT).show();
